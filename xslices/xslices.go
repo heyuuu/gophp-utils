@@ -1,7 +1,7 @@
-package slicex
+package xslices
 
 // Filter 过滤符合条件的元素生成新的slice
-// 与 slices.DeleteFunc() 不用，slicex.Filter 会产生新的slices而不是原地修改
+// 与 slices.DeleteFunc() 不同，xslices.Filter 会产生新的slices而不是原地修改
 func Filter[S ~[]E, E any](s S, predicate func(E) bool) S {
 	if len(s) == 0 {
 		return nil
