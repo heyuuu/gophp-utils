@@ -1,4 +1,4 @@
-# gophp-kits
+# gophp-utils
 
 gophp 相关项目的通用 kits 包集合。
 

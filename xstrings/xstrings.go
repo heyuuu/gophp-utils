@@ -1,7 +1,7 @@
 package xstrings
 
 import (
-	"github.com/heyuuu/gophp-kits/ascii"
+	"github.com/heyuuu/gophp-utils/ascii"
 	"strings"
 )
 
