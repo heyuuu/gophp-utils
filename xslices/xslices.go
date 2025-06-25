@@ -28,7 +28,7 @@ func Map[S ~[]E1, E1 any, E2 any](s S, transform func(E1) E2) []E2 {
 	return result
 }
 
-// 类似 slices.Index()，但是是反向开始查找的
+// LastIndex 类似 slices.Index()，但是是反向开始查找的
 func LastIndex[S ~[]E, E comparable](s S, v E) int {
 	for i := len(s) - 1; i >= 0; i-- {
 		if v == s[i] {
@@ -38,7 +38,7 @@ func LastIndex[S ~[]E, E comparable](s S, v E) int {
 	return -1
 }
 
-// 类似 slices.IndexFunc()，但是是反向开始查找的
+// LastIndexFunc 类似 slices.IndexFunc()，但是是反向开始查找的
 func LastIndexFunc[S ~[]E, E any](s S, f func(E) bool) int {
 	for i := len(s) - 1; i >= 0; i-- {
 		if f(s[i]) {
@@ -46,4 +46,24 @@ func LastIndexFunc[S ~[]E, E any](s S, f func(E) bool) int {
 		}
 	}
 	return -1
+}
+
+// Every 判断切片中是否所有元素都符合条件
+func Every[S ~[]E, E any](s S, predicate func(E) bool) bool {
+	for _, v := range s {
+		if !predicate(v) {
+			return false
+		}
+	}
+	return true
+}
+
+// Any 判断切片中是否有任一元素符合条件
+func Any[S ~[]E, E any](s S, predicate func(E) bool) bool {
+	for _, v := range s {
+		if predicate(v) {
+			return true
+		}
+	}
+	return false
 }
