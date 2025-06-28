@@ -1,7 +1,7 @@
 package xslices
 
 // Filter 过滤符合条件的元素生成新的slice
-// 与 slices.DeleteFunc() 不同，xslices.Filter 会产生新的slices而不是原地修改
+// 与 slices.FilterInplace() 实现不同，本函数会分配新内存而不会影响旧 slice
 func Filter[S ~[]E, E any](s S, predicate func(E) bool) S {
 	if len(s) == 0 {
 		return nil
@@ -12,6 +12,32 @@ func Filter[S ~[]E, E any](s S, predicate func(E) bool) S {
 		if predicate(item) {
 			result = append(result, item)
 		}
+	}
+
+	if len(result) == 0 {
+		return nil
+	}
+	return result
+}
+
+// FilterInplace 过滤符合条件的元素生成新的slice
+// 与 slices.Filter() 实现不同，本函数会修改原 slice 而不会分配新内存
+// 功能类似于 slices.DeleteFunc() 的，差别在 predicate 函数的结果是反向的
+func FilterInplace[S ~[]E, E any](s S, predicate func(E) bool) S {
+	if len(s) == 0 {
+		return nil
+	}
+
+	result := s[0:0:len(s)] // 复用原 slice 内存
+	for _, item := range s {
+		if predicate(item) {
+			result = append(result, item)
+		}
+	}
+	clear(s[len(result):]) // 重置未使用的内存，与 slices.DeleteFunc() 中的逻辑类似
+
+	if len(result) == 0 {
+		return nil
 	}
 	return result
 }
