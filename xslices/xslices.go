@@ -42,6 +42,7 @@ func FilterInplace[S ~[]E, E any](s S, predicate func(E) bool) S {
 	return result
 }
 
+// Map 为切片的每个值应用回调函数并将结果作为新的切片
 func Map[S ~[]E1, E1 any, E2 any](s S, transform func(E1) E2) []E2 {
 	if len(s) == 0 {
 		return nil
@@ -50,6 +51,27 @@ func Map[S ~[]E1, E1 any, E2 any](s S, transform func(E1) E2) []E2 {
 	result := make([]E2, len(s))
 	for i, v := range s {
 		result[i] = transform(v)
+	}
+	return result
+}
+
+// MapInplace 为切片的每个值应用回调函数并设置到原位置
+// 与 Map 不同，此函数会直接修改切片而不会申请新内存
+func MapInplace[S ~[]E, E any](s S, transform func(E) E) {
+	for i, v := range s {
+		s[i] = transform(v)
+	}
+}
+
+func Unique[S ~[]E, E comparable](s S) S {
+	result := make(S, 0, len(s))
+	seen := make(map[E]struct{}, len(s))
+
+	for _, item := range s {
+		if _, ok := seen[item]; !ok {
+			seen[item] = struct{}{}
+			result = append(result, item)
+		}
 	}
 	return result
 }
