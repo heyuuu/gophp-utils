@@ -183,3 +183,68 @@ func TestMapInplace(t *testing.T) {
 		})
 	}
 }
+
+func TestDiff(t *testing.T) {
+	type testCase struct {
+		name        string
+		slice       []int
+		otherSlices [][]int
+		want        []int
+		wantRaw     []int
+	}
+	tests := []testCase{
+		{
+			name:  "Diff nil slice",
+			slice: nil,
+			otherSlices: [][]int{
+				{1, 2, 3},
+				nil,
+			},
+			want:    nil,
+			wantRaw: nil,
+		},
+		{
+			name:  "Diff result simple",
+			slice: []int{1, 2, 3, 4, 5},
+			otherSlices: [][]int{
+				{1, 2, 3},
+				nil,
+			},
+			want:    []int{4, 5},
+			wantRaw: []int{1, 2, 3, 4, 5},
+		},
+		{
+			name:  "Diff result is empty slice",
+			slice: []int{1, 2, 3, 4, 5},
+			otherSlices: [][]int{
+				{1, 2, 3},
+				nil,
+				{4, 5},
+			},
+			want:    nil,
+			wantRaw: []int{1, 2, 3, 4, 5},
+		},
+		{
+			name:  "slice has duplicate item",
+			slice: []int{3, 1, 1, 4, 3, 1},
+			otherSlices: [][]int{
+				{2, 3, 3},
+				nil,
+			},
+			want:    []int{1, 1, 4, 1},
+			wantRaw: []int{3, 1, 1, 4, 3, 1},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			raw := tt.slice
+			got := Diff(raw, tt.otherSlices...)
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Diff() = %v, want %v", got, tt.want)
+			}
+			if !reflect.DeepEqual(raw, tt.wantRaw) {
+				t.Errorf("raw = %v, wantRaw %v", raw, tt.wantRaw)
+			}
+		})
+	}
+}

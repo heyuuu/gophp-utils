@@ -63,6 +63,39 @@ func MapInplace[S ~[]E, E any](s S, transform func(E) E) {
 	}
 }
 
+// Diff 计算切片的差集，不修改原切片
+// 保留所有在 s 中存在且未在 others 里出现的元素，元素顺序不变
+func Diff[S ~[]E, E comparable](s S, others ...S) S {
+	if len(s) == 0 {
+		return nil
+	}
+
+	keep := make(map[E]struct{}, len(s))
+	for _, item := range s {
+		keep[item] = struct{}{}
+	}
+
+	for _, other := range others {
+		for _, item := range other {
+			delete(keep, item)
+			if len(keep) == 0 {
+				return nil
+			}
+		}
+		if len(keep) == 0 {
+			return nil
+		}
+	}
+
+	result := make(S, 0, len(s)) // 注意此处不可用 len(keep)，因为会有重复值
+	for _, item := range s {
+		if _, ok := keep[item]; ok {
+			result = append(result, item)
+		}
+	}
+	return result
+}
+
 func Unique[S ~[]E, E comparable](s S) S {
 	result := make(S, 0, len(s))
 	seen := make(map[E]struct{}, len(s))
