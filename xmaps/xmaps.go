@@ -32,6 +32,19 @@ func SortedKeys[M ~map[K]V, K cmp.Ordered, V any](m M) []K {
 	return keys
 }
 
+// Combine 创建一个Map，以一个数组作为其键名，另一个数组作为其值
+func Combine[Keys ~[]K, Values ~[]V, K comparable, V any](keys Keys, values Values) map[K]V {
+	if len(keys) != len(values) {
+		panic("slices.Combine: keys and values must have the same length")
+	}
+
+	result := make(map[K]V, len(keys))
+	for i, key := range keys {
+		result[key] = values[i]
+	}
+	return result
+}
+
 func GetOrElse[K comparable, V any, Map ~map[K]V](m Map, key K, defaultValue func() V) V {
 	if value, exists := m[key]; exists {
 		return value
