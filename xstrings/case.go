@@ -66,6 +66,17 @@ func ToUpper(s string) string {
 	return unsafeBytesToString(buf)
 }
 
+// IsUpper 判断是否全大写
+func IsUpper(s string) bool {
+	for _, c := range []byte(s) {
+		rc := byteToUpper[c]
+		if rc != c {
+			return false
+		}
+	}
+	return true
+}
+
 // ToLower 字符串转小写
 // 与标准库 strings.ToLower() 的区别是，它不处理除英文字母外的其他unicode字母
 func ToLower(s string) string {
@@ -84,6 +95,17 @@ func ToLower(s string) string {
 		return s
 	}
 	return unsafeBytesToString(buf)
+}
+
+// IsLower 判断是否全小写
+func IsLower(s string) bool {
+	for _, c := range []byte(s) {
+		rc := byteToLower[c]
+		if rc != c {
+			return false
+		}
+	}
+	return true
 }
 
 // Capitalize 首字母大写，其他字母小写
