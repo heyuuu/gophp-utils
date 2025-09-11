@@ -64,3 +64,18 @@ func GetOrPut[K comparable, V any, Map ~map[K]V](m Map, key K, defaultValue func
 		return value
 	}
 }
+
+func Merge[K comparable, V any](maps ...map[K]V) map[K]V {
+	size := 0
+	for _, m := range maps {
+		size += len(m)
+	}
+
+	result := make(map[K]V, size)
+	for _, m := range maps {
+		for k, v := range m {
+			result[k] = v
+		}
+	}
+	return result
+}
