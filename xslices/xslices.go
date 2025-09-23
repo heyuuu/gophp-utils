@@ -63,6 +63,19 @@ func MapInplace[S ~[]E, E any](s S, transform func(E) E) {
 	}
 }
 
+// MapIndexed 为切片的每个值应用回调函数并将结果作为新的切片, 类似 Map 但是回调函数包含 int 索引值
+func MapIndexed[S ~[]E1, E1 any, E2 any](s S, transform func(int, E1) E2) []E2 {
+	if len(s) == 0 {
+		return nil
+	}
+
+	result := make([]E2, len(s))
+	for i, v := range s {
+		result[i] = transform(i, v)
+	}
+	return result
+}
+
 // Diff 计算切片的差集，不修改原切片
 // 保留所有在 s 中存在且未在 others 里出现的元素，元素顺序不变
 func Diff[S ~[]E, E comparable](s S, others ...S) S {
