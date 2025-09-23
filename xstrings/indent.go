@@ -51,3 +51,21 @@ func TrimIndent(s string) string {
 	}
 	return strings.Join(lines, "\n")
 }
+
+// PrependIndent 给多行字符串添加同一个前缀
+func PrependIndent(s string, prefix string) string {
+	if prefix == "" {
+		return s
+	}
+
+	lines := strings.Split(s, "\n")
+
+	var buf strings.Builder
+	buf.Grow(len(s) + len(lines)*len(prefix))
+	for _, line := range lines {
+		buf.WriteString(prefix)
+		buf.WriteString(line)
+		buf.WriteString("\n")
+	}
+	return buf.String()
+}
