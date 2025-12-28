@@ -1,6 +1,7 @@
 package xstrings
 
 import (
+	"strconv"
 	"testing"
 )
 
@@ -11,28 +12,22 @@ func TestTrimIndent(t *testing.T) {
 		want string
 	}{
 		{
-			"",
-			"\tline1\n" + "\t\tline2\n",
-			"line1\n" + "\tline2\n",
+			arg:  "\tline1\n" + "\t\tline2\n",
+			want: "line1\n" + "\tline2",
 		},
 		{
-			"",
-			`
-			line1
-				line2
-					line3
-`,
-			`
-line1
-	line2
-		line3
-`,
+			arg: `
+				line1
+					line2
+						line3
+			`,
+			want: "line1\n\tline2\n\t\tline3",
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := TrimIndent(tt.arg); got != tt.want {
-				t.Errorf("TrimIndent() = %v, want %v", got, tt.want)
+				t.Errorf("TrimIndent() = %v, want %v", strconv.Quote(got), strconv.Quote(tt.want))
 			}
 		})
 	}

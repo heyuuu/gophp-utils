@@ -15,7 +15,7 @@ func indentWidth(s string) int {
 }
 
 // TrimIndent 去除多行字符串的前置缩进，多用于代码中大段文本的美化表示
-// 去除缩进长度为所有非空白行缩进长度的最小值；空白行缩进长度不够时置空
+// 去除缩进长度为所有非空白行缩进长度的最小值；空白行缩进长度不够时置空；若首尾行为空行则移除
 func TrimIndent(s string) string {
 	lines := strings.Split(s, "\n")
 
@@ -39,6 +39,14 @@ func TrimIndent(s string) string {
 	// 无需修改缩进时，直接返回原值
 	if commonIndent <= 0 {
 		return s
+	}
+
+	// 首行和末行若为空白行，则移除
+	if len(lines) > 0 && IsBlank(lines[0]) {
+		lines = lines[1:]
+	}
+	if len(lines) > 0 && IsBlank(lines[len(lines)-1]) {
+		lines = lines[:len(lines)-1]
 	}
 
 	// 逐行修改
