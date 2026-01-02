@@ -49,3 +49,53 @@ func LastCut(s string, sep string) (before, after string, found bool) {
 	}
 	return s, "", false
 }
+
+// Join
+// strings.Join() 的别名占位
+func Join(elems []string, sep string) string {
+	return strings.Join(elems, sep)
+}
+
+// JoinFunc
+// 类似 strings.Join()，但是支持非 string 类型列表+转换函数
+func JoinFunc[T any](elems []T, sep string, transform func(T) string) string {
+	switch len(elems) {
+	case 0:
+		return ""
+	case 1:
+		return transform(elems[0])
+	}
+
+	var buf strings.Builder
+	for i, elem := range elems {
+		if i > 0 {
+			buf.WriteString(sep)
+		}
+		buf.WriteString(transform(elem))
+	}
+	return buf.String()
+}
+
+func ReverseJoin(elems []string, sep string) string {
+	switch len(elems) {
+	case 0:
+		return ""
+	case 1:
+		return elems[0]
+	}
+
+	size := (len(elems) - 1) * len(sep)
+	for _, elem := range elems {
+		size += len(elem)
+	}
+
+	var buf strings.Builder
+	buf.Grow(size)
+	for i := len(elems) - 1; i >= 0; i-- {
+		buf.WriteString(elems[i])
+		if i > 0 {
+			buf.WriteString(sep)
+		}
+	}
+	return buf.String()
+}
